@@ -12,10 +12,10 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../auth/roles.guard';
-import { Roles } from '../auth/roles.decorator';
+import { RolesGuard } from '../common/guards/roles.guard';
+import { Roles } from '../common/decorators/roles.decorator';
 import { ChangeUserRoleDto } from './dto/change-user-role.dto';
-import { JwtPayload } from 'src/auth/jwt-payload.interface';
+import { JwtPayload } from 'src/interfaces/jwt-payload.interface';
 import { User } from 'src/interfaces/user.interface';
 
 @Controller('users')
