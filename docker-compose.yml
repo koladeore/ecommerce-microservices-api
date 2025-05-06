@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ecommerce
+    ports:
+    - "5432:5432"
+    volumes:
+    - postgres_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672" # broker
+      - "15672:15672" # dashboard
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  order-service:
+    build: ./order-service
+    depends_on:
+      - rabbitmq
+    ports:
+      - "3000:3000"    
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+
+  payment-service:
+    build: ./payment-service
+    depends_on:
+      - rabbitmq
+    ports:
+      - "3001:3001"  
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+
+  notification-service:
+    build: ./notification-service
+    depends_on:
+      - rabbitmq
+    ports:
+      - "3002:3002"    
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672
+  user-service:
+    build: ./user-service
+    depends_on:
+      - rabbitmq
+    ports:
+      - "3003:3003"  
+    environment:
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672     
+volumes:
+  postgres_data:
+
